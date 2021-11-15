@@ -110,34 +110,45 @@ let addTransaction = (req: Request, res: Response) => {
 
 let readCLientTransactions = (req: Request, res: Response) => {
   let usId = Number(req.params.userId);
-  let index = clientsGrowBank.findIndex((user) => user.id == usId);
-  let iValue = clientsGrowBank[index].transactions.map((item) =>
-    item.type == "income" ? item.value : 0
-  );
-  let oValue = clientsGrowBank[index].transactions.map((item) =>
-    item.type == "outcome" ? item.value : 0
-  );
-  let i = iValue.reduce((x, y) => x + y);
-  let o = oValue.reduce((x, y) => x + y);
-  let t = i - o;
+  let index = clientsGrowBank.findIndex((user) => user.id === usId);
 
-  res.status(200).send({
-    nameClient: clientsGrowBank[index].name,
-    transactions: clientsGrowBank[index].transactions,
-    balance: { income: i, outcome: o, total: t },
-  });
+  if (index < 0) {
+    res.status(404).send({ message: "Not found !" });
+  } else {
+    let motion = clientsGrowBank[index].transactions.find((transaction) => transaction);
+    if (motion == null) {
+      res.status(404).send({ message: "Not found or there are no transactions!" });
+    } else {
+      let iValue = clientsGrowBank[index].transactions.map((item) =>
+        item.type == "income" ? item.value : 0
+      );
+      let oValue = clientsGrowBank[index].transactions.map((item) =>
+        item.type == "outcome" ? item.value : 0
+      );
+      let i = iValue.reduce((x, y) => x + y);
+      let o = oValue.reduce((x, y) => x + y);
+      let t = i - o;
+
+      res.status(200).send({
+        nameClient: clientsGrowBank[index].name,
+        transactions: clientsGrowBank[index].transactions,
+        balance: { income: i, outcome: o, total: t },
+      });
+    }
+  }
 };
 
 let customerSpecificTransaction = (req: Request, res: Response) => {
   let usId = Number(req.params.userId);
   let index = clientsGrowBank.findIndex((user) => user.id == usId);
   let transId = Number(req.params.id);
-  let indexTrans = clientsGrowBank[index].transactions.findIndex(
-    (transaction) => transaction.id == transId
-  );
+
   if (index < 0) {
     res.status(404).send({ message: "Not found!" });
   } else {
+    let indexTrans = clientsGrowBank[index].transactions.findIndex(
+      (transaction) => transaction.id == transId
+    );
     if (indexTrans < 0) {
       res
         .status(404)
