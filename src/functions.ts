@@ -4,16 +4,12 @@ import { Response, Request } from "express";
 
 let eId: number = 3;
 
-let readEmployees = (req: Request, res: Response) => {
-  let { username, password } = req.body;
-  const index = employeesGrowBank.findIndex((employee) => employee.id);
-  if (
-    employeesGrowBank[index].username == username &&
-    employeesGrowBank[index].password == password
-  ) {
-    res
-      .status(200)
-      .send({ message: `${employeesGrowBank[index].username} Welcome to GrowBank Transactions!` });
+let readEmployees = (res: Response) => {
+  if (employeesGrowBank) {
+    res.status(200).send({ message: employeesGrowBank });
+    return employeesGrowBank;
+  } else {
+    res.status(404).send({ message: "Not Found" });
   }
 };
 let cliId: number = 1;

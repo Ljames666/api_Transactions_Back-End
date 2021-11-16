@@ -16,7 +16,7 @@ import checkRequests from "./middlewares";
 let router = Router();
 router.use(checkRequests);
 router.get("/", (req: Request, res: Response) => {
-  readEmployees(req, res);
+  readEmployees(res);
 });
 // inicio a operação de clientes
 router.post("/clients", (req: Request, res: Response) => {
