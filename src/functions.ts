@@ -6,8 +6,7 @@ let eId: number = 3;
 
 let readEmployees = (res: Response) => {
   if (employeesGrowBank) {
-    res.status(200).send({ message: employeesGrowBank });
-    return employeesGrowBank;
+    res.status(200).send({ employeesGrowBank });
   } else {
     res.status(404).send({ message: "Not Found" });
   }
