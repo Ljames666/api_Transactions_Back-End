@@ -63,11 +63,11 @@ let editClient = (req: Request, res: Response) => {
     if (index < 0) {
       res.status(404).send({ message: "Not found!" });
     } else {
-      clientsGrowBank[id].name = name;
-      clientsGrowBank[id].cpf = cpf;
-      clientsGrowBank[id].email = email;
-      clientsGrowBank[id].age = age;
-      res.send({ client: clientsGrowBank[id], message: "User successfully modified!" });
+      clientsGrowBank[index].name = name;
+      clientsGrowBank[index].cpf = cpf;
+      clientsGrowBank[index].email = email;
+      clientsGrowBank[index].age = age;
+      res.send({ client: clientsGrowBank[index], message: "User successfully modified!" });
     }
   }
 };
@@ -150,9 +150,9 @@ let customerSpecificTransaction = (req: Request, res: Response) => {
       (transaction) => transaction.id == transId
     );
     if (indexTrans < 0) {
-      res
-        .status(404)
-        .send({ message: `Client ${clientsGrowBank[index].name} has no transactions!` });
+      res.status(404).send({
+        message: `Client ${clientsGrowBank[index].name} this transaction does not exist!`,
+      });
     } else {
       res.status(200).send({
         cliente: clientsGrowBank[index].name,
@@ -165,9 +165,7 @@ let editSpecificTransaction = (req: Request, res: Response) => {
   let usId = Number(req.params.userId);
   let index = clientsGrowBank.findIndex((user) => user.id == usId);
   let transId = Number(req.params.id);
-  let indexTrans = clientsGrowBank[index].transactions.findIndex(
-    (transaction) => transaction.id == transId
-  );
+
   let { title, value, type } = req.body;
 
   if (!title || !value || !type) {
@@ -178,10 +176,13 @@ let editSpecificTransaction = (req: Request, res: Response) => {
   } else if (index < 0) {
     res.status(404).send({ message: "Not found!" });
   } else {
+    let indexTrans = clientsGrowBank[index].transactions.findIndex(
+      (transaction) => transaction.id == transId
+    );
     if (indexTrans < 0) {
-      res
-        .status(404)
-        .send({ message: `Client ${clientsGrowBank[index].name} has no transactions!` });
+      res.status(404).send({
+        message: `Client ${clientsGrowBank[index].name} this transaction does not exist!`,
+      });
     } else {
       clientsGrowBank[index].transactions[indexTrans].title = title;
       clientsGrowBank[index].transactions[indexTrans].value = value;
@@ -199,18 +200,25 @@ let removeTransactions = (req: Request, res: Response) => {
   let usId = Number(req.params.userId);
   let index = clientsGrowBank.findIndex((user) => user.id == usId);
   let transId = Number(req.params.id);
-  let indexTrans = clientsGrowBank[index].transactions.findIndex(
-    (transaction) => transaction.id == transId
-  );
+
   if (index < 0) {
     res.status(404).send({ message: "Not found!" });
-  } else if (indexTrans < 0) {
-    res.status(404).send({ message: `Client ${clientsGrowBank[index].name} has no transactions!` });
   } else {
-    clientsGrowBank[index].transactions.splice(indexTrans, 1);
-    res.send({
-      message: `${clientsGrowBank[index].name} your transaction was deleted successfully`,
-    });
+    let indexTrans = clientsGrowBank[index].transactions.findIndex(
+      (transaction) => transaction.id == transId
+    );
+    if (indexTrans < 0) {
+      res
+        .status(404)
+        .send({
+          message: `Client ${clientsGrowBank[index].name} this transaction does not exist!`,
+        });
+    } else {
+      clientsGrowBank[index].transactions.splice(indexTrans, 1);
+      res.send({
+        message: `${clientsGrowBank[index].name} your transaction was deleted successfully`,
+      });
+    }
   }
 };
 //fim
