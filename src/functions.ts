@@ -208,11 +208,9 @@ let removeTransactions = (req: Request, res: Response) => {
       (transaction) => transaction.id == transId
     );
     if (indexTrans < 0) {
-      res
-        .status(404)
-        .send({
-          message: `Client ${clientsGrowBank[index].name} this transaction does not exist!`,
-        });
+      res.status(404).send({
+        message: `Client ${clientsGrowBank[index].name} this transaction does not exist!`,
+      });
     } else {
       clientsGrowBank[index].transactions.splice(indexTrans, 1);
       res.send({
