@@ -1,0 +1,15 @@
+{
+    "version": 2,
+    "builds": [
+        {
+            "dist": "main.js",
+            "use": "@now/node"
+        }
+    ],
+    "routes": [
+        {
+            "dist": "/(.*)",
+            "dest": "main.js"
+        }
+    ]
+}
