@@ -3,7 +3,6 @@
 
     "builds": [
         {
-            "buildCommand": "npm run build",
             "src": "dist/main.js",
             "use": "@vercel/node",
             "config": { "includeFiles": ["dist/**"] }
